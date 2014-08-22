@@ -10,6 +10,8 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.joybug.pojo.Orders;
+
 /**
  * Unit test for simple App.
  */
@@ -26,9 +28,9 @@ public class TestCase {
 	@Test
 	public void AppTest() throws InvalidKeyException, UnsupportedEncodingException, NoSuchAlgorithmException {
 		List<NameValuePair> array = new ArrayList<NameValuePair>();
-		array.add(new NameValuePair("status", "completed"));
+		array.add(new NameValuePair("id","1867"));
 		WooCommerceClientHelper woo = WooCommerceClientHelper.getInstance(secret, key, url);
-		System.out.println(woo._make_api_call("orders", array, "GET"));
+		Orders wa = woo._make_api_call("orders", array, "GET");
 	}
 
 }

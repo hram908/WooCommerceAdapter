@@ -25,6 +25,10 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.lang3.StringUtils;
 
+import com.google.gson.Gson;
+import com.joybug.pojo.Order;
+import com.joybug.pojo.Orders;
+
 /**
  * Hello world!
  * 
@@ -64,11 +68,23 @@ public class WooCommerceClientHelper {
 			throws UnsupportedEncodingException, InvalidKeyException, NoSuchAlgorithmException {
 		if (params == null) {
 			params = new ArrayList<NameValuePair>();
+		}else{
+			NameValuePair id = null;
+			for (NameValuePair nameValuePair : params) {
+				id = nameValuePair.getName().equals("id")?nameValuePair:null;
+			}
+			if(id!=null){
+				params.remove(id);
+				endpoint=endpoint+"/"+id.getValue();
+			}
 		}
 
 		if (method == null) {
 			method = "GET";
 		}
+		
+		
+		
 		params.add(new NameValuePair("oauth_consumer_key", key));
 		params.add(new NameValuePair("oauth_timestamp", time()));
 
