@@ -1,4 +1,4 @@
-package com.prous.trdnpdf.tuvieja;
+package com.wooCommerce.forJ.client;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -26,8 +26,8 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.gson.Gson;
-import com.joybug.pojo.Order;
-import com.joybug.pojo.Orders;
+import com.wooCommerce.forJ.pojo.Order;
+import com.wooCommerce.forJ.pojo.Orders;
 
 /**
  * Hello world!

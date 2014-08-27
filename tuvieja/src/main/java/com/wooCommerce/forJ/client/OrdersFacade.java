@@ -1,8 +1,8 @@
-package com.prous.trdnpdf.tuvieja;
+package com.wooCommerce.forJ.client;
 
 import java.util.List;
 
-import com.joybug.pojo.Order;
+import com.wooCommerce.forJ.pojo.Order;
 
 public interface OrdersFacade {
 	public enum Statuses {

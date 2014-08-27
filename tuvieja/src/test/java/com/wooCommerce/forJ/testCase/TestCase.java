@@ -1,4 +1,4 @@
-package com.prous.trdnpdf.tuvieja;
+package com.wooCommerce.forJ.testCase;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -10,7 +10,8 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.joybug.pojo.Orders;
+import com.wooCommerce.forJ.client.WooCommerceClientHelper;
+import com.wooCommerce.forJ.pojo.Orders;
 
 /**
  * Unit test for simple App.
@@ -28,9 +29,10 @@ public class TestCase {
 	@Test
 	public void AppTest() throws InvalidKeyException, UnsupportedEncodingException, NoSuchAlgorithmException {
 		List<NameValuePair> array = new ArrayList<NameValuePair>();
-		array.add(new NameValuePair("id","1867"));
+		array.add(new NameValuePair("type","variable-subscription"));
 		WooCommerceClientHelper woo = WooCommerceClientHelper.getInstance(secret, key, url);
-		Orders wa = woo._make_api_call("orders", array, "GET");
+		String wa = woo._make_api_call("products", array, "GET");
+		System.out.println(wa);
 	}
 
 }

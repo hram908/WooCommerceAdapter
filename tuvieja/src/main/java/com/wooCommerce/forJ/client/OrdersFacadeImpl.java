@@ -1,4 +1,4 @@
-package com.prous.trdnpdf.tuvieja;
+package com.wooCommerce.forJ.client;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,8 +7,8 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.gson.Gson;
-import com.joybug.pojo.Order;
-import com.joybug.pojo.Orders;
+import com.wooCommerce.forJ.pojo.Order;
+import com.wooCommerce.forJ.pojo.Orders;
 
 public class OrdersFacadeImpl implements OrdersFacade {
 	private final String secret = "cs_c184cb8055b47a1df6242b4dcc9318f9";

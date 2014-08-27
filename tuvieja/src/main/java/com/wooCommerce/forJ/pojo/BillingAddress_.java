@@ -1,12 +1,12 @@
 
-package com.joybug.pojo;
+package com.wooCommerce.forJ.pojo;
 
 import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("org.jsonschema2pojo")
-public class BillingAddress {
+public class BillingAddress_ {
 
     @SerializedName("address_1")
     @Expose

@@ -1,4 +1,4 @@
-package com.joybug.pojo;
+package com.wooCommerce.forJ.pojo;
 
 import java.util.ArrayList;
 import java.util.List;
