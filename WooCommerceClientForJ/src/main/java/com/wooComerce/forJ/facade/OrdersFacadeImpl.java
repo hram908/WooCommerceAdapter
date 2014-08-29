@@ -1,4 +1,4 @@
-package com.wooCommerce.forJ.client;
+package com.wooComerce.forJ.facade;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,16 +7,21 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.gson.Gson;
+import com.wooCommerce.forJ.client.WooCommerceClientHelper;
 import com.wooCommerce.forJ.pojo.Order;
 import com.wooCommerce.forJ.pojo.Orders;
 
 public class OrdersFacadeImpl implements OrdersFacade {
-	private final String secret = "cs_c184cb8055b47a1df6242b4dcc9318f9";
-	private final String key = "ck_db853a745d378b0944342c0ecc96535a";
-	private final String url = "http://joybug.net";
+//	private final String secret = "cs_c184cb8055b47a1df6242b4dcc9318f9";
+//	private final String key = "ck_db853a745d378b0944342c0ecc96535a";
+//	private final String url = "http://joybug.net";
 
-	private final WooCommerceClientHelper wooClient = WooCommerceClientHelper.getInstance(secret, key, url);
+	private WooCommerceClientHelper wooClient;
 
+	public OrdersFacadeImpl(String secret,String key,String url){
+		wooClient = WooCommerceClientHelper.getInstance(secret,key,url);
+	}
+	
 	@Override
 	public List<Order> getOrdersWithStatus(Statuses status, List<String> fields) throws Exception {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();

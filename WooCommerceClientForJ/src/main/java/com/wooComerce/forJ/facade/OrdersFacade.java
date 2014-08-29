@@ -1,4 +1,4 @@
-package com.wooCommerce.forJ.client;
+package com.wooComerce.forJ.facade;
 
 import java.util.List;
 
