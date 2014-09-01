@@ -7,7 +7,7 @@ import com.wooCommerce.forJ.pojo.Order;
 public interface OrdersFacade {
 	public enum Statuses {
 		pending("pending"), onHold("on-hold"), processing("processing"), completed("completed"), refunded("refunded"), failed(
-				"failed"), cancelled("cancelled");
+				"failed"), cancelled("cancelled"), subscribed("subscribed"), unsubscribed("unsubscribed");
 
 		private final String statusName;
 
