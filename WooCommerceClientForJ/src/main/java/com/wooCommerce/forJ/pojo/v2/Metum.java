@@ -2,8 +2,10 @@
 package com.wooCommerce.forJ.pojo.v2;
 
 import javax.annotation.Generated;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.google.gson.annotations.Expose;
-import org.apache.commons.lang.builder.ToStringBuilder;
 
 @Generated("org.jsonschema2pojo")
 public class Metum {

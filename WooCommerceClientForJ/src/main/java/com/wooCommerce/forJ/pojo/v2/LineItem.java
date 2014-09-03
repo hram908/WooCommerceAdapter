@@ -3,10 +3,13 @@ package com.wooCommerce.forJ.pojo.v2;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.annotation.Generated;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import org.apache.commons.lang.builder.ToStringBuilder;
 
 @Generated("org.jsonschema2pojo")
 public class LineItem {
