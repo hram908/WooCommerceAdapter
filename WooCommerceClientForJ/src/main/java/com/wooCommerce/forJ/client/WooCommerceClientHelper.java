@@ -26,8 +26,8 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.gson.Gson;
-import com.wooCommerce.forJ.pojo.Order;
-import com.wooCommerce.forJ.pojo.Orders;
+import com.wooCommerce.forJ.pojo.v1.Order;
+import com.wooCommerce.forJ.pojo.v1.Orders;
 
 /**
  * Hello world!
@@ -35,8 +35,16 @@ import com.wooCommerce.forJ.pojo.Orders;
  */
 public class WooCommerceClientHelper {
 
+	public enum ApiVersion {
+		v1, v2
+	}
+	
+	public enum ApiElements{
+		orders,products,coupons,customers,reports
+	}
+
 	private static final String ENC = "HMAC-SHA256";
-	private static final String API_URL = "/wc-api/v1/";
+	private static final String API_URL = "/wc-api/";
 	private static final String HASH_ALGORITHM = "HmacSHA256";
 	private static Base64 base64 = new Base64();
 	private static WooCommerceClientHelper instance;
@@ -44,6 +52,7 @@ public class WooCommerceClientHelper {
 	private String secret;
 	private String key;
 	private String url;
+	private String version;
 
 	protected WooCommerceClientHelper() {
 
@@ -56,35 +65,37 @@ public class WooCommerceClientHelper {
 		return instance;
 	}
 
-	public static WooCommerceClientHelper getInstance(String secret, String key, String url) {
+	public static WooCommerceClientHelper getInstance(String secret,
+			String key, String url, ApiVersion api) {
 		instance = getInstance();
+		instance.version = api.toString() + "/";
 		instance.key = key;
 		instance.secret = secret;
 		instance.url = url;
 		return instance;
 	}
 
-	public String _make_api_call(String endpoint, List<NameValuePair> params, String method)
-			throws UnsupportedEncodingException, InvalidKeyException, NoSuchAlgorithmException {
+	public String _make_api_call(String endpoint, List<NameValuePair> params,
+			String method) throws UnsupportedEncodingException,
+			InvalidKeyException, NoSuchAlgorithmException {
 		if (params == null) {
 			params = new ArrayList<NameValuePair>();
-		}else{
+		} else {
 			NameValuePair id = null;
 			for (NameValuePair nameValuePair : params) {
-				id = nameValuePair.getName().equals("id")?nameValuePair:null;
+				id = nameValuePair.getName().equals("id") ? nameValuePair
+						: null;
 			}
-			if(id!=null){
+			if (id != null) {
 				params.remove(id);
-				endpoint=endpoint+"/"+id.getValue();
+				endpoint = endpoint + "/" + id.getValue();
 			}
 		}
 
 		if (method == null) {
 			method = "GET";
 		}
-		
-		
-		
+
 		params.add(new NameValuePair("oauth_consumer_key", key));
 		params.add(new NameValuePair("oauth_timestamp", time()));
 
@@ -92,16 +103,21 @@ public class WooCommerceClientHelper {
 
 		params.add(new NameValuePair("oauth_signature_method", ENC));
 
-		params.add(new NameValuePair("oauth_signature", generate_oauth_signature(params, method, endpoint)));
+		params.add(new NameValuePair("oauth_signature",
+				generate_oauth_signature(params, method, endpoint)));
 
-		String parametersQuery = "?" + UrlBuilder.httpBuildQuery(parameterListToMap(params), ENC);
+		String parametersQuery = "?"
+				+ UrlBuilder.httpBuildQuery(parameterListToMap(params), ENC);
 
 		HttpClient client = new HttpClient();
 
-		client.getParams().setParameter(HttpMethodParams.USER_AGENT,
-				"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
+		client.getParams()
+				.setParameter(
+						HttpMethodParams.USER_AGENT,
+						"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
 
-		GetMethod get = new GetMethod(url + API_URL + endpoint + parametersQuery) {
+		GetMethod get = new GetMethod(url + API_URL + version + endpoint
+				+ parametersQuery) {
 			@Override
 			public boolean getFollowRedirects() {
 				return true;
@@ -137,9 +153,12 @@ public class WooCommerceClientHelper {
 		return String.valueOf(new Date().getTime()).substring(0, 10);
 	}
 
-	private String generate_oauth_signature(List<NameValuePair> params, String httpmethod, String endpoint)
-			throws UnsupportedEncodingException, InvalidKeyException, NoSuchAlgorithmException {
-		String base_request_uri = URLEncoder.encode(url + API_URL + endpoint, "UTF-8");
+	private String generate_oauth_signature(List<NameValuePair> params,
+			String httpmethod, String endpoint)
+			throws UnsupportedEncodingException, InvalidKeyException,
+			NoSuchAlgorithmException {
+		String base_request_uri = URLEncoder.encode(url + API_URL + version
+				+ endpoint, "UTF-8");
 		params = normalize_parameters(params);
 
 		uksort(params);
@@ -163,20 +182,22 @@ public class WooCommerceClientHelper {
 		});
 	}
 
-	private static List<NameValuePair> normalize_parameters(List<NameValuePair> parameters)
-			throws UnsupportedEncodingException {
+	private static List<NameValuePair> normalize_parameters(
+			List<NameValuePair> parameters) throws UnsupportedEncodingException {
 
 		List<NameValuePair> normalized = new ArrayList<NameValuePair>();
 		for (NameValuePair parameter : parameters) {
 			String key = rawurlencode(parameter.getName()).replace("%", "%25");
-			String value = rawurlencode(parameter.getValue()).replace("%", "%25");
+			String value = rawurlencode(parameter.getValue()).replace("%",
+					"%25");
 			normalized.add(new NameValuePair(key, value));
 		}
 
 		return normalized;
 	}
 
-	private static String rawurlencode(String string) throws UnsupportedEncodingException {
+	private static String rawurlencode(String string)
+			throws UnsupportedEncodingException {
 		return URLEncoder.encode(string, "UTF-8");
 	}
 
@@ -184,7 +205,8 @@ public class WooCommerceClientHelper {
 		return StringUtils.join(elems, separator);
 	}
 
-	private static Map<String, Object> parameterListToMap(List<NameValuePair> params) {
+	private static Map<String, Object> parameterListToMap(
+			List<NameValuePair> params) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		for (NameValuePair parameter : params) {
 			map.put(parameter.getName(), parameter.getValue());
@@ -192,8 +214,9 @@ public class WooCommerceClientHelper {
 		return map;
 	}
 
-	private String getSignature(String url, String params, String method) throws UnsupportedEncodingException,
-			NoSuchAlgorithmException, InvalidKeyException {
+	private String getSignature(String url, String params, String method)
+			throws UnsupportedEncodingException, NoSuchAlgorithmException,
+			InvalidKeyException {
 		/**
 		 * base has three parts, they are connected by "&": 1) protocol 2) URL
 		 * (need to be URLEncoded) 3) Parameter List (need to be URLEncoded).
@@ -211,7 +234,8 @@ public class WooCommerceClientHelper {
 		Mac mac = Mac.getInstance(HASH_ALGORITHM);
 		mac.init(key);
 
-		String signa = new String(base64.encode(mac.doFinal(base.toString().getBytes("UTF-8"))), "UTF-8").trim();
+		String signa = new String(base64.encode(mac.doFinal(base.toString()
+				.getBytes("UTF-8"))), "UTF-8").trim();
 
 		return signa;
 	}

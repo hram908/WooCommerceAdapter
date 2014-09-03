@@ -2,7 +2,8 @@ package com.wooCommerce.forJ.facade;
 
 import java.util.List;
 
-import com.wooCommerce.forJ.pojo.Order;
+import com.wooCommerce.forJ.interfaces.OrdersInterface;
+import com.wooCommerce.forJ.pojo.v1.Order;
 
 public interface OrdersFacade {
 	public enum Statuses {
@@ -20,9 +21,9 @@ public interface OrdersFacade {
 		}
 	}
 
-	public List<Order> getOrdersWithStatus(Statuses status, List<String> fields) throws Exception;
+	public <T extends OrdersInterface<U>, U> List<U> getOrdersWithStatus(Statuses status, List<String> fields, T type) throws Exception;
 
-	public Order getOrder(String id, List<String> fields) throws Exception;
+	public <T extends OrdersInterface<U>, U> U getOrder(String id, List<String> fields, T type) throws Exception;
 
-	public void updateOrderStatus(Statuses status, String id) throws Exception;
+	public <T extends OrdersInterface> void updateOrderStatus(Statuses status, String id, T type) throws Exception;
 }

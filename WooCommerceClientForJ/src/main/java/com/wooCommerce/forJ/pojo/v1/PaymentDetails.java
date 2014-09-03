@@ -1,5 +1,5 @@
 
-package com.wooCommerce.forJ.pojo;
+package com.wooCommerce.forJ.pojo.v1;
 
 import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;

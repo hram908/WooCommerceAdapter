@@ -1,12 +1,12 @@
 
-package com.wooCommerce.forJ.pojo;
+package com.wooCommerce.forJ.pojo.v1;
 
 import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("org.jsonschema2pojo")
-public class BillingAddress {
+public class ShippingAddress {
 
     @SerializedName("address_1")
     @Expose
@@ -20,16 +20,12 @@ public class BillingAddress {
     private String company;
     @Expose
     private String country;
-    @Expose
-    private String email;
     @SerializedName("first_name")
     @Expose
     private String firstName;
     @SerializedName("last_name")
     @Expose
     private String lastName;
-    @Expose
-    private String phone;
     @Expose
     private String postcode;
     @Expose
@@ -75,14 +71,6 @@ public class BillingAddress {
         this.country = country;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -97,14 +85,6 @@ public class BillingAddress {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getPostcode() {
