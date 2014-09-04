@@ -17,6 +17,8 @@ import com.wooCommerce.forJ.facade.OrdersFacade.Statuses;
 import com.wooCommerce.forJ.facade.OrdersFacadeImpl;
 import com.wooCommerce.forJ.pojo.v1.Order;
 import com.wooCommerce.forJ.pojo.v1.Orders;
+import com.wooCommerce.forJ.pojo.v2.LineItem;
+import com.wooCommerce.forJ.pojo.v2.Metum;
 
 /**
  * Unit test for simple App.
@@ -32,30 +34,49 @@ public class TestCase {
 	}
 
 	@Test
-	public void AppTest() throws InvalidKeyException, UnsupportedEncodingException, NoSuchAlgorithmException {
+	public void AppTest() throws InvalidKeyException,
+			UnsupportedEncodingException, NoSuchAlgorithmException {
 		List<NameValuePair> array = new ArrayList<NameValuePair>();
-//		array.add(new NameValuePair("type","variable-subscription"));
-		WooCommerceClientHelper woo = WooCommerceClientHelper.getInstance(secret, key, url,ApiVersion.v2);
-//		String wa = woo._make_api_call("products", array, "GET");
+		// array.add(new NameValuePair("type","variable-subscription"));
+		WooCommerceClientHelper woo = WooCommerceClientHelper.getInstance(
+				secret, key, url, ApiVersion.v2);
+		// String wa = woo._make_api_call("products", array, "GET");
 		String wa = woo._make_api_call("orders", array, "GET");
 		System.out.println(wa);
 	}
-	
+
 	@Test
-	public void OrdersTestV1() throws Exception{
-		OrdersFacade a = new OrdersFacadeImpl(secret, key, url,ApiVersion.v1);
-		for ( Order order :a.getOrdersWithStatus(Statuses.completed, null, new Orders()))  {
+	public void OrdersTestV1() throws Exception {
+		OrdersFacade a = new OrdersFacadeImpl(secret, key, url, ApiVersion.v1);
+		for (Order order : a.getOrdersWithStatus(Statuses.completed, null,
+				new Orders())) {
 			System.out.println(order.getCustomerId());
 		}
-		
+
 	}
-	
+
 	@Test
-	public void OrdersTestV2() throws Exception{
-		OrdersFacade a = new OrdersFacadeImpl(secret, key, url,ApiVersion.v2);
-		for ( com.wooCommerce.forJ.pojo.v2.Order order :a.getOrdersWithStatus(Statuses.completed, null, new com.wooCommerce.forJ.pojo.v2.Orders()))  {
-			System.out.println(order.getCustomerId());
+	public void OrdersTestV2() throws Exception {
+		OrdersFacade a = new OrdersFacadeImpl(secret, key, url, ApiVersion.v2);
+		for (com.wooCommerce.forJ.pojo.v2.Order order : a.getOrdersWithStatus(
+				Statuses.completed, null,
+				new com.wooCommerce.forJ.pojo.v2.Orders())) {
+			for (LineItem line : order.getLineItems()) {
+				for (Metum meta : line.getMeta()) {
+					try {
+						System.out.println(meta.getDateValue("hh:mm aa"));
+					} catch (Exception e) {
+						try {
+							System.out.println(meta.getDateValue("hhmm-aa"));
+						} catch (Exception e2) {
+							System.out.println(meta.getValue());
+						}
+					}
+				}
+
+			}
+			System.out.println(order);
 		}
-		
+
 	}
 }
