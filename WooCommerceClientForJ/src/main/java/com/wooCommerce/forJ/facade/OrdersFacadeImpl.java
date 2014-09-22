@@ -63,7 +63,7 @@ public class OrdersFacadeImpl implements OrdersFacade {
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new NameValuePair("id", id));
 			params.add(new NameValuePair("status", status.getStatusName()));
-			callApi(params,"PUT");
+			callApi(params,"POST");
 		}
 
 	}

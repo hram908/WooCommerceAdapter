@@ -79,4 +79,42 @@ public class TestCase {
 		}
 
 	}
+	
+	@Test
+	public void modifyOrdersStatusV2() throws Exception {
+		OrdersFacade a = new OrdersFacadeImpl(secret, key, url, ApiVersion.v2);
+		com.wooCommerce.forJ.pojo.v2.Order ab = null;
+		for (com.wooCommerce.forJ.pojo.v2.Order order : a.getOrdersWithStatus(
+				Statuses.completed, null,
+				new com.wooCommerce.forJ.pojo.v2.Orders()))
+		{
+			if(ab==null){
+				ab = order;
+			}
+			for (LineItem line : order.getLineItems()) {
+				for (Metum meta : line.getMeta()) {
+					try {
+						System.out.println(meta.getDateValue("hh:mm aa"));
+					} catch (Exception e) {
+						try {
+							System.out.println(meta.getDateValue("hhmm-aa"));
+						} catch (Exception e2) {
+							System.out.println(meta.getValue());
+						}
+					}
+				}
+
+			}
+			
+			a.updateOrderStatus(Statuses.subscribed, ab.getId().toString(), new com.wooCommerce.forJ.pojo.v2.Orders());
+		}
+
+	}
+	
+	@Test
+	public void tuvieja() throws Exception {
+		OrdersFacade a = new OrdersFacadeImpl(secret, key, url, ApiVersion.v2);
+			a.updateOrderStatus(Statuses.subscribed, String.valueOf(1965), new com.wooCommerce.forJ.pojo.v2.Orders());
+	
+	}
 }
