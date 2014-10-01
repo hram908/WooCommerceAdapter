@@ -22,10 +22,15 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.lang3.StringUtils;
+
+import com.wooCommerce.forJ.netHelper.EasySSLProtocolSocketFactory;
 
 /**
  * Hello world!
@@ -51,6 +56,7 @@ public class WooCommerceClientHelper {
 	private String key;
 	private String url;
 	private String version;
+	private Boolean ssh = false;
 
 	protected WooCommerceClientHelper() {
 
@@ -69,9 +75,11 @@ public class WooCommerceClientHelper {
 		instance.key = key;
 		instance.secret = secret;
 		instance.url = url;
+		instance.ssh = url.contains("https");
 		return instance;
 	}
 
+	@SuppressWarnings("deprecation")
 	public String _make_api_call(String endpoint, List<NameValuePair> params, String method)
 			throws UnsupportedEncodingException, InvalidKeyException, NoSuchAlgorithmException {
 		if (params == null) {
@@ -93,31 +101,36 @@ public class WooCommerceClientHelper {
 			method = "GET";
 		}
 
-		params.add(new NameValuePair("oauth_consumer_key", key));
-		params.add(new NameValuePair("oauth_timestamp", time()));
-
-		params.add(new NameValuePair("oauth_nonce", sha1(microtime())));
-
-		params.add(new NameValuePair("oauth_signature_method", ENC));
-
-		params.add(new NameValuePair("oauth_signature", generate_oauth_signature(params, method, endpoint)));
-
-		String parametersQuery = "?" + UrlBuilder.httpBuildQuery(parameterListToMap(params), ENC);
-
 		HttpClient client = new HttpClient();
+		if (ssh) {
+			client.getState().setProxyCredentials(AuthScope.ANY, new UsernamePasswordCredentials(key, secret));
+		
+
+		} else {
+			
+			params.add(new NameValuePair("oauth_consumer_key", key));
+			params.add(new NameValuePair("oauth_timestamp", time()));
+			
+			params.add(new NameValuePair("oauth_nonce", sha1(microtime())));
+			
+			params.add(new NameValuePair("oauth_signature_method", ENC));
+			params.add(new NameValuePair("oauth_signature", generate_oauth_signature(params, method, endpoint)));
+		}
+		
+		String parametersQuery = "?" + UrlBuilder.httpBuildQuery(parameterListToMap(params), ENC);
 
 		client.getParams().setParameter(HttpMethodParams.USER_AGENT,
 				"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
 
 		HttpMethod meth = null;
 		if (method.equalsIgnoreCase("POST") || method.equalsIgnoreCase("PUT")) {
-			PostMethod trans = new PostMethod(url + API_URL + version + endpoint+parametersQuery) {
+			PostMethod trans = new PostMethod(url + API_URL + version + endpoint + parametersQuery) {
 				@Override
 				public boolean getFollowRedirects() {
 					return true;
 				}
 			};
-			for (NameValuePair nameValuePair : params) {				
+			for (NameValuePair nameValuePair : params) {
 				trans.addParameter(nameValuePair);
 			}
 			meth = trans;
@@ -262,7 +275,5 @@ public class WooCommerceClientHelper {
 		formatter.close();
 		return result;
 	}
-	
-	
 
 }
