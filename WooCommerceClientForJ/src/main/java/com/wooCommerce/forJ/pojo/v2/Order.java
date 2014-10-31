@@ -522,7 +522,13 @@ public class Order {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+    	return new ToStringBuilder(this)
+        .append("id", id)
+        .append("orderNumber", orderNumber)
+        .append("status", status)
+        .append("lineItems", lineItems)
+        .append("customer", customer).toString();
+       // return ToStringBuilder.reflectionToString(this);
     }
-
+ 
 }

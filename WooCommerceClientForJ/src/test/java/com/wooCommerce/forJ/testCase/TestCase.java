@@ -1,28 +1,12 @@
 package com.wooCommerce.forJ.testCase;
 
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.httpclient.NameValuePair;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.api.client.util.DateTime;
-import com.wooCommerce.forJ.client.WooCommerceClientHelper;
 import com.wooCommerce.forJ.client.WooCommerceClientHelper.ApiVersion;
 import com.wooCommerce.forJ.facade.OrdersFacade;
-import com.wooCommerce.forJ.facade.OrdersFacade.Filters;
 import com.wooCommerce.forJ.facade.OrdersFacade.Statuses;
 import com.wooCommerce.forJ.facade.OrdersFacadeImpl;
-import com.wooCommerce.forJ.netHelper.EasySSLProtocolSocketFactory;
-import com.wooCommerce.forJ.pojo.v1.Order;
-import com.wooCommerce.forJ.pojo.v1.Orders;
 import com.wooCommerce.forJ.pojo.v2.LineItem;
 import com.wooCommerce.forJ.pojo.v2.Metum;
 
@@ -36,10 +20,10 @@ public class TestCase {
 	public void init() {
 		secret = "cs_c184cb8055b47a1df6242b4dcc9318f9";
 		key = "ck_db853a745d378b0944342c0ecc96535a";
-		url = "https://joybug.net";
+		url = "http://joybug.net";
 	}
 
-	@Test
+/*	@Test
 	public void AppTest() throws InvalidKeyException, UnsupportedEncodingException, NoSuchAlgorithmException {
 		List<NameValuePair> array = new ArrayList<NameValuePair>();
 		// array.add(new NameValuePair("type","variable-subscription"));
@@ -56,7 +40,7 @@ public class TestCase {
 			System.out.println(order.getCustomerId());
 		}
 
-	}
+	}*/
 
 	@Test
 	public void OrdersTestV2() throws Exception {
@@ -81,7 +65,7 @@ public class TestCase {
 		}
 
 	}
-
+/*
 	@Test
 	public void modifyOrdersStatusV2() throws Exception {
 		OrdersFacade a = new OrdersFacadeImpl(secret, key, url, ApiVersion.v2);
@@ -129,5 +113,5 @@ public class TestCase {
 		filters.put(Filters.updated_at_min, "2014-09-20");
 		System.out.println(a.getOrdersWithFilters(null, new com.wooCommerce.forJ.pojo.v2.Orders(), filters));
 		
-	}
+	}*/
 }

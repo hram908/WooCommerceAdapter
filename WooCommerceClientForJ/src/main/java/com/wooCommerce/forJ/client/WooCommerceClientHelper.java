@@ -27,10 +27,8 @@ import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.lang3.StringUtils;
-
-import com.wooCommerce.forJ.netHelper.EasySSLProtocolSocketFactory;
+import org.apache.log4j.Logger;
 
 /**
  * Hello world!
@@ -57,6 +55,9 @@ public class WooCommerceClientHelper {
 	private String url;
 	private String version;
 	private Boolean ssh = false;
+	
+	private Logger logger = Logger.getLogger(WooCommerceClientHelper.class);
+
 
 	protected WooCommerceClientHelper() {
 
@@ -82,6 +83,9 @@ public class WooCommerceClientHelper {
 	@SuppressWarnings("deprecation")
 	public String _make_api_call(String endpoint, List<NameValuePair> params, String method)
 			throws UnsupportedEncodingException, InvalidKeyException, NoSuchAlgorithmException {
+		
+		String logId = new StringBuffer(" API CALL ").append(System.currentTimeMillis()).append(" | ").toString();
+		
 		if (params == null) {
 			params = new ArrayList<NameValuePair>();
 		} else {
@@ -110,9 +114,10 @@ public class WooCommerceClientHelper {
 			
 			params.add(new NameValuePair("oauth_consumer_key", key));
 			params.add(new NameValuePair("oauth_timestamp", time()));
-			
-			params.add(new NameValuePair("oauth_nonce", sha1(microtime())));
-			
+//			String microtime = microtime();
+			String milis = String.valueOf(System.currentTimeMillis());
+//			System.out.println(new StringBuffer(logId).append("microtime: ").append(microtime).append("; sha1: ").append(sha1(microtime)).append("milis: ").append(milis).toString());
+			params.add(new NameValuePair("oauth_nonce", sha1(milis)));			
 			params.add(new NameValuePair("oauth_signature_method", ENC));
 			params.add(new NameValuePair("oauth_signature", generate_oauth_signature(params, method, endpoint)));
 		}
@@ -123,8 +128,12 @@ public class WooCommerceClientHelper {
 				"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
 
 		HttpMethod meth = null;
+		String completePath = new StringBuffer(url).append(API_URL).append(version).append(endpoint).append(parametersQuery).toString();
+		String info = new StringBuffer(logId).append(" URL: ").append(completePath).toString();
+		logger.info(info);
+		System.out.println(info);
 		if (method.equalsIgnoreCase("POST") || method.equalsIgnoreCase("PUT")) {
-			PostMethod trans = new PostMethod(url + API_URL + version + endpoint + parametersQuery) {
+			PostMethod trans = new PostMethod(completePath) {
 				@Override
 				public boolean getFollowRedirects() {
 					return true;
@@ -137,7 +146,7 @@ public class WooCommerceClientHelper {
 
 		} else {
 
-			meth = new GetMethod(url + API_URL + version + endpoint + parametersQuery) {
+			meth = new GetMethod(completePath) {
 				@Override
 				public boolean getFollowRedirects() {
 					return true;
@@ -153,12 +162,18 @@ public class WooCommerceClientHelper {
 			body = meth.getResponseBodyAsString();
 
 		} catch (Exception e) {
+			logger.error(e.getCause());
+			logger.error(e.getStackTrace());
+			System.out.println(e.getCause());
+			System.out.println(e.getStackTrace());
 			e.printStackTrace();
 		} finally {
 			// release any connection resources used by the method
 			meth.releaseConnection();
 		}
-
+		String infoRes = new StringBuffer(logId).append(" RESPONSE: ").append(body).append(" END RESPONSE").toString();
+		logger.info(infoRes);
+		System.out.println(infoRes);
 		return body;
 
 	}
